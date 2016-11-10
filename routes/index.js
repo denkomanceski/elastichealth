@@ -22,7 +22,7 @@ var client = new elasticsearch.Client({
 function createData(body) {
     return new Promise((resolve, reject) => {
         client.create({
-            index: 'testindex123',
+            index: 'testindex1234',
             type: 'mytype',
             body
         }, function (error, response) {
@@ -36,7 +36,7 @@ function createData(body) {
 function getData(size) {
     return new Promise((resolve, reject) => {
         client.search({
-            index: 'testindex123',
+            index: 'testindex1234',
             size
             // Set to 30 seconds because we are calling right back
 
