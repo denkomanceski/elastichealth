@@ -52,6 +52,7 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 router.post('/data', (req, res) => {
+    console.log(JSON.stringify(req.body));
     var data = req.body;
     data['qcl_json_data'] = JSON.parse(data['qcl_json_data'])
     data.timestamp = new Date();
