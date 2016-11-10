@@ -33,10 +33,11 @@ function createData(body) {
         });
     })
 }
-function getData() {
+function getData(size) {
     return new Promise((resolve, reject) => {
         client.search({
             index: 'testindex',
+            size
             // Set to 30 seconds because we are calling right back
 
         }, (err, res) => {
@@ -51,12 +52,15 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 router.post('/data', (req, res) => {
-    createData(req.body).then(success => {
+    var data = JSON.parse(req.body);
+    data.timestamp = new Date();
+    createData(data).then(success => {
         res.send(success)
     });
 });
 router.get('/data', (req, res) => {
-    getData().then(data => {
+    var size = req.query.size || 30;
+    getData(size).then(data => {
         res.send(data)
     })
 })
