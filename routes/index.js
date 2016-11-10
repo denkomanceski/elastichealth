@@ -22,8 +22,8 @@ var client = new elasticsearch.Client({
 function createData(body) {
     return new Promise((resolve, reject) => {
         client.create({
-            index: 'testindex',
-            type: 'healthdata',
+            index: 'testindex123',
+            type: 'mytype',
             body
         }, function (error, response) {
             // ...
@@ -36,7 +36,7 @@ function createData(body) {
 function getData(size) {
     return new Promise((resolve, reject) => {
         client.search({
-            index: 'testindex',
+            index: 'testindex123',
             size
             // Set to 30 seconds because we are calling right back
 
@@ -52,7 +52,8 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 router.post('/data', (req, res) => {
-    var data = JSON.parse(req.body);
+    var data = req.body;
+    data['qcl_json_data'] = JSON.parse(data['qcl_json_data'])
     data.timestamp = new Date();
     createData(data).then(success => {
         res.send(success)
