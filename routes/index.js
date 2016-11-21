@@ -67,7 +67,9 @@ function getData(size, mac, type) {
 
                             // Set to 30 seconds because we are calling right back
 
-                        }
+                        },
+                        "sort": { "timestamp": { "order": "desc" }}
+
                     }
                 }, (err, res) => {
                     if (err) throw err;
