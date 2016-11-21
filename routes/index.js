@@ -33,17 +33,51 @@ function createData(body) {
         });
     })
 }
-function getData(size) {
+function getData(size, mac, type) {
     return new Promise((resolve, reject) => {
-        client.search({
-            index: 'testindex1234',
-            size
-            // Set to 30 seconds because we are calling right back
+        if (mac && type)
+            client.search({
+                    index: 'testindex1234',
+                    size,
+                    body: {
+                        "query": {
+                            "constant_score": {
+                                "filter": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "match_phrase": {
+                                                    "qcl_json_data.deviceDetails.address.value": mac
+                                                }
+                                            },
+                                            /*{
+                                             "match_phrase": {
+                                             "qcl_json_data.deviceDetails.transmissionTime.value": "2016-11-10 09:43:30"
+                                             }
+                                             },*/
+                                            {
+                                                "match_phrase": {
+                                                    "qcl_json_data.records.packetType.value": type
+                                                }
+                                            }
+                                        ]
 
-        }, (err, res) => {
-            if(err) throw err;
-            resolve(res.hits ? res.hits : {err: true, reason: "err"})
-        })
+                                    }
+                                }
+                            }
+
+                            // Set to 30 seconds because we are calling right back
+
+                        }
+                    }
+                }, (err, res) => {
+                    if (err) throw err;
+                    resolve(res.hits ? res.hits : {err: true, reason: "err"})
+                }
+            )
+        else {
+            resolve([])
+        }
     })
 
 }
@@ -62,7 +96,9 @@ router.post('/data', (req, res) => {
 });
 router.get('/data', (req, res) => {
     var size = req.query.size || 30;
-    getData(size).then(data => {
+    var mac = req.query.mac;
+    var type = req.query.type;
+    getData(size, mac, type).then(data => {
         res.send(data)
     })
 })
