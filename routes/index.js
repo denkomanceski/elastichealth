@@ -35,7 +35,22 @@ function createData(body) {
 }
 function getData(size, mac, type) {
     return new Promise((resolve, reject) => {
-        if (mac && type)
+        var searchMust = []
+        if (mac) {
+            searchMust.push({
+                "match_phrase": {
+                    "qcl_json_data.deviceDetails.address.value": mac
+                }
+            })
+        }
+        if (type) {
+            searchMust.push({
+                "match_phrase": {
+                    "qcl_json_data.records.packetType.value": type
+                }
+            })
+        }
+        if (searchMust.length != 0)
             client.search({
                     index: 'testindex1234',
                     size,
@@ -44,23 +59,7 @@ function getData(size, mac, type) {
                             "constant_score": {
                                 "filter": {
                                     "bool": {
-                                        "must": [
-                                            {
-                                                "match_phrase": {
-                                                    "qcl_json_data.deviceDetails.address.value": mac
-                                                }
-                                            },
-                                            /*{
-                                             "match_phrase": {
-                                             "qcl_json_data.deviceDetails.transmissionTime.value": "2016-11-10 09:43:30"
-                                             }
-                                             },*/
-                                            {
-                                                "match_phrase": {
-                                                    "qcl_json_data.records.packetType.value": type
-                                                }
-                                            }
-                                        ]
+                                        "must": searchMust
 
                                     }
                                 }
