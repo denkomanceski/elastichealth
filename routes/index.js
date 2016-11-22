@@ -50,7 +50,7 @@ function getData(size, mac, type) {
                 }
             })
         }
-        if (searchMust.length != 0)
+        /*if (searchMust.length != 0)*/
             client.search({
                     index: 'testindex1234',
                     size,
@@ -76,9 +76,9 @@ function getData(size, mac, type) {
                     resolve(res.hits ? res.hits : {err: true, reason: "err"})
                 }
             )
-        else {
+       /* else {
             resolve([])
-        }
+        }*/
     })
 
 }
@@ -102,5 +102,5 @@ router.get('/data', (req, res) => {
     getData(size, mac, type).then(data => {
         res.send(data)
     })
-})
+});
 module.exports = router;
